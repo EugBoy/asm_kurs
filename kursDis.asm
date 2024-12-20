@@ -13,9 +13,10 @@
     lods_com            db  'lodsb', 'lodsw', 'lodsd'
     jcc_singl_op        db  'JO  ', 'JNO ', 'JC  ', 'JNS ', 'JE  ', 'JNE ', 'JBE ', 'JA  ', 'JS  ', 'JNS ', 'JP  ', 'JNP ', 'JL  ', 'JNL ', 'JNG ', 'JNLE', 'JCXZ'
     jcc_addr_buffer     db  2 dup(?)
-    jcc_single_op_str   db  ' +000'
+    jcc_single_op_str   db  '     '
     jcc_bynary_op_str   db  ' +00000'
     jcc_is_single_op    db  0
+    is_neg              db  0
     cnl                 db  0Dh, 0Ah, 0Dh, 0Ah 
 .code
 Start:
@@ -147,19 +148,37 @@ jcc_comand:
     inc     al
     neg     al
     inc     al
-    mov     [jcc_single_op_str + 1], '-'
+    mov     is_neg, 1
+    mov     si, 3
 pos_op:    
     xor     ah, ah
     aam
     add     al, 30h
     mov     [jcc_single_op_str + 4], al
     mov     al, ah
-    aam
-    add     al, 30h
+    mov     si, 3
+    aam     
+    cmp     ah, 0
+    je      cont_pos_op
     add     ah, 30h
-    mov     [jcc_single_op_str + 3], al
+    add     al, 30h
     mov     [jcc_single_op_str + 2], ah
-    
+    mov     [jcc_single_op_str + 3], al
+    mov     si, 1
+    jmp     wr_op
+cont_pos_op:
+    mov     si, 2
+    cmp     al, 0
+    je      wr_op
+    add     al, 30h
+    mov     [jcc_single_op_str + 3], al
+wr_op:
+    cmp     is_neg, 1
+    jne     cont_wr_op
+    mov     [jcc_single_op_str + si], '-'
+cont_wr_op:
+    mov     si, 0
+    mov     is_neg, 0
     mov     ah, 040h
     mov     bx, [fileoutdesc]
     mov     cx, 4
@@ -178,7 +197,10 @@ pos_op:
     mov     dx, offset cnl
     int     21h
     
-    mov     [jcc_single_op_str + 1], '+'
+    mov     [jcc_single_op_str + 1], ' '
+    mov     [jcc_single_op_str + 2], ' '
+    mov     [jcc_single_op_str + 3], ' '
+    mov     [jcc_single_op_str + 4], ' '
     mov     jcc_is_single_op, 0
     
     jmp read_file_start
