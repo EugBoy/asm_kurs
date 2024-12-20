@@ -14,9 +14,12 @@
     jcc_singl_op        db  'JO  ', 'JNO ', 'JC  ', 'JNS ', 'JE  ', 'JNE ', 'JBE ', 'JA  ', 'JS  ', 'JNS ', 'JP  ', 'JNP ', 'JL  ', 'JNL ', 'JNG ', 'JNLE', 'JCXZ'
     jcc_addr_buffer     db  2 dup(?)
     jcc_single_op_str   db  '     '
-    jcc_bynary_op_str   db  ' +00000'
+    jcc_bynary_op_str   db  '       '
     jcc_is_single_op    db  0
     is_neg              db  0
+    btr_cod             db  'btr'
+    btr_seg             db  'CS', 'SS', 'DS', 'ES', 'FS', 'GS'
+    btr_seg_adr         db   ?
     cnl                 db  0Dh, 0Ah, 0Dh, 0Ah 
 .code
 Start:
@@ -62,7 +65,7 @@ not_byn_op:
 check_jcc:
     cmp     ax, 0E3h
     jne     continue_check_jcc
-    mov     dx, 64
+    mov     dx, 16
     jmp     jcc_comand
 continue_check_jcc:
     cmp     ax, 70h    
@@ -219,7 +222,7 @@ jcc_read_word:
     add     ax, 1
     neg     ax
     add     ax, 1
-    mov     [jcc_bynary_op_str+1], '-'
+    mov     is_neg, 1
 jcc_word_positive:
     xor     dx, dx
     mov     cx, 10
@@ -229,7 +232,7 @@ jcc_word_positive:
     xor     dx, dx
     div     cx
     add     dx, 30h
-    mov     [jcc_bynary_op_str+6], dl
+    mov     [jcc_bynary_op_str+5], dl
     xor     dx, dx
     div     cx
     add     dx, 30h
@@ -242,7 +245,32 @@ jcc_word_positive:
     div     cx
     add     dx, 30h
     mov     [jcc_bynary_op_str+2], dl
+    mov     si, 1
+    cmp     [jcc_bynary_op_str+2], 30h
+    jne     jcc_b_wr
+    mov     [jcc_bynary_op_str+2], ' '
+    inc     si
     
+    cmp     [jcc_bynary_op_str+3], 30h
+    jne     jcc_b_wr
+    mov     [jcc_bynary_op_str+3], ' '
+    inc     si
+    
+    cmp     [jcc_bynary_op_str+4], 30h
+    jne     jcc_b_wr
+    mov     [jcc_bynary_op_str+4], ' '
+    inc     si
+    
+    cmp     [jcc_bynary_op_str+5], 30h
+    jne     jcc_b_wr
+    mov     [jcc_bynary_op_str+5], ' '
+    inc     si
+    
+jcc_b_wr:
+    cmp     is_neg, 1
+    jne     jcc_b_cont_wr
+    mov     [jcc_bynary_op_str+si], '-'
+jcc_b_cont_wr:
     mov     ah, 040h
     mov     bx, [fileoutdesc]
     mov     cx, 4
@@ -261,11 +289,24 @@ jcc_word_positive:
     mov     dx, offset cnl
     int     21h
     
-    mov     [jcc_bynary_op_str+1], '+'
     mov     jcc_is_single_op, 0
+    mov     is_neg, 0
+    
+    mov     [jcc_single_op_str + 1], ' '
+    mov     [jcc_single_op_str + 2], ' '
+    mov     [jcc_single_op_str + 3], ' '
+    mov     [jcc_single_op_str + 4], ' '
+    mov     [jcc_single_op_str + 5], ' '
+    mov     [jcc_single_op_str + 6], ' '
     
     jmp     read_file_start;
 finish:
-    mov ah, 4Ch
+    mov     ah, 03Eh
+    mov     bx, [filedesc]
+    int     21h
+    mov     ah, 03Eh
+    mov     bx, [fileoutdesc]
+    int     21h
+    mov     ah, 4Ch
     int     21h
 end Start

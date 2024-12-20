@@ -1,0 +1,166 @@
+lodsb
+
+lodsw
+
+lodsd
+
+lodsb
+
+lodsw
+
+lodsd
+
+JE      204
+
+JNLE    200
+
+JNL     196
+
+JL      192
+
+JNG     188
+
+JNS     184
+
+JNE     180
+
+JNO     176
+
+JNP     172
+
+JNS     168
+
+JO      164
+
+JP      160
+
+JS      156
+
+JC      152
+
+JA      148
+
+JNS     144
+
+JBE     140
+
+JE    13061
+
+JNLE  13062
+
+JNL   13063
+
+JL    13064
+
+JNG   13065
+
+JNS   13066
+
+JNE   13067
+
+JNO   13070
+
+JNP   13071
+
+JNS   13072
+
+JO    13073
+
+JP    13074
+
+JS    13075
+
+JC   -28672
+
+JA    -6397
+
+JNS   10748
+
+JBE    -129
+
+JNS    66
+
+JC     64
+
+JBE    62
+
+JCXZ   60
+
+JE     58
+
+JNLE   56
+
+JNL    54
+
+JL     52
+
+JNG    50
+
+JNE    48
+
+JNO    46
+
+JNP    44
+
+JNS    42
+
+JO     40
+
+JP     38
+
+JS     36
+
+JA     34
+
+JNS    18
+
+JC     52
+
+JBE    86
+
+JCXZ  120
+
+JE   -102
+
+JNLE  -68
+
+JNL   -34
+
+JL     15
+
+JNG     0
+
+JNE     1
+
+JNO     2
+
+JNP     3
+
+JNS     4
+
+JO      5
+
+JP      6
+
+JS      7
+
+JA      8
+
+lodsb
+
+lodsw
+
+lodsd
+
+lodsb
+
+lodsw
+
+lodsd
+
+lodsb
+
+lodsw
+
+lodsd
+
